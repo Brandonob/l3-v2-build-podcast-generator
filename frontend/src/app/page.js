@@ -15,18 +15,12 @@ export default function Home() {
   const [text, setText] = useState('');
   const [file, setFile] = useState(null);
 
-  // test
-
-  const handleTextChange = (event) => {
-    setText(event.target.value);
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     // Handle form submission logic
     const formData = new FormData();
@@ -54,7 +48,7 @@ export default function Home() {
             <Textarea
               placeholder='Enter your text here'
               value={text}
-              onChange={handleTextChange}
+              onChange={(e) => setText(e.target.value)}
             />
           </FormControl>
 
