@@ -13,6 +13,8 @@ import {
 
 export default function Home() {
   const [text, setText] = useState('');
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
   const [file, setFile] = useState(null);
 
   const handleFileChange = (e) => {
@@ -20,29 +22,39 @@ export default function Home() {
   };
 
   const handleSubmit = async (e) => {
+    //if transcript execute transcript webspeech logic
+    //if file upload execute file logic with gemini
     e.preventDefault();
-
     // Handle form submission logic
     const formData = new FormData();
     formData.append('text', text);
-    formData.append('file', file);
+    // formData.append('file', file);
+    debugger;
 
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await response.json();
-      console.log('Upload successful:', data);
-    } catch (error) {
-      console.error('Error uploading:', error);
-    }
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.onstart = () => setIsSpeaking(true);
+    speech.onstart = () => setIsSpeaking(true);
+
+    window.speechSynthesis.speak(speech);
+
+    // try {
+    //   const response = await fetch('/api/upload', {
+    //     method: 'POST',
+    //     body: formData,
+    //   });
+    //   const data = await response.json();
+    //   console.log('Upload successful:', data);
+    // } catch (error) {
+    //   console.error('Error uploading:', error);
+    // }
   };
 
   return (
     <Box maxW='md' mx='auto' mt={8} p={4} borderWidth={1} borderRadius='md'>
       <form onSubmit={handleSubmit}>
         <VStack spacing={4}>
+          {/* show if transcript button is active */}
           <FormControl id='text' isRequired>
             <FormLabel>Text Input</FormLabel>
             <Textarea
@@ -51,18 +63,23 @@ export default function Home() {
               onChange={(e) => setText(e.target.value)}
             />
           </FormControl>
-
-          <FormControl id='file' isRequired>
+          {/* show if upload button is active */}
+          {/* <FormControl id='file' isRequired>
             <FormLabel>File Upload</FormLabel>
             <Input
               type='file'
               onChange={handleFileChange}
               accept='.png, .jpg, .jpeg, .pdf' // Restrict file types if needed
             />
-          </FormControl>
+          </FormControl> */}
 
-          <Button type='submit' colorScheme='blue' w='full'>
-            Submit
+          <Button
+            type='submit'
+            colorScheme='blue'
+            w='full'
+            disabled={isSpeaking}
+          >
+            {isSpeaking ? 'Speaking...' : 'Speak'}
           </Button>
         </VStack>
       </form>
