@@ -10,3 +10,13 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.post('/api/textToAudio', async (req, res) => {
+  const { transcript } = req.body;
+  try {
+  } catch (error) {}
+});
+
+app.listen(PORT, () => {
+  console.log('App is listening on port');
+});
